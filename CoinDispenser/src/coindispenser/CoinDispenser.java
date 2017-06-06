@@ -35,7 +35,7 @@ public class CoinDispenser {
      */
     public CoinDispenser(int initialCoins) {
         coinCounters = new int[VALUES.length];
-        for (int i = 1; i < coinCounters.length; i++)
+        for (int i = 0; i < coinCounters.length; i++)
             coinCounters[i] = initialCoins;
     }
         
@@ -92,13 +92,14 @@ public class CoinDispenser {
      */
     public void dispenseCoins(List<Integer> coins) throws DispenserError {
         int[] newcounts= coinCounters.clone();
-        for (int c : coins) {
+        for (int c : VALUES) {
             int index = getValueIndex(c);
-            if (index < 0)
+            if (index < 0 || index > 6)
                 throw new DispenserError("Unknown coin type '" + c + "'");
             if (newcounts[index] < 1)
                 throw new DispenserError("Not enough coins of type " + c);
-            newcounts[index]--;
+            if((newcounts[index] -= coins.get(index))<0)
+                throw new DispenserError("Not enough coins of type " + c);;
         }
         coinCounters = newcounts;
     }
